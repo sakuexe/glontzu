@@ -8,36 +8,41 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 const infoBox = document.querySelector("#info-message");
 
 /** @type {THREE.Scene} */
-let scene;
-/** @type {THREE.Camera} */
-export let camera;
-let renderer;
-let cube;
-let glontzu;
-/** @type {THREE.DirectionalLight} */
-export let directionalLight;
+const scene = new THREE.Scene();
+/** @type {THREE.PerspectiveCamera} */
+export const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-if (WebGL.isWebGL2Available()) {
-  // Initiate function or other initializations here
-  initiate();
-} else {
+// check that webgl is supported
+if (!WebGL.isWebGL2Available()) {
   const warning = WebGL.getWebGL2ErrorMessage();
   document.querySelector('#error-message')?.appendChild(warning);
 }
+/** @type {THREE.WebGLRenderer} */
+const renderer = new THREE.WebGLRenderer();
 
-function initiate() {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// models
+let cube;
+let glontzu;
 
-  renderer = new THREE.WebGLRenderer();
+// lights
+/** @type {THREE.DirectionalLight} */
+export const directionalLight = new THREE.DirectionalLight(0xd67d3e, 0.1);
+
+// timing with clock (for delta time)
+const clock = new THREE.Clock(true);
+
+initiateScene();
+
+function initiateScene() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
+
   camera.position.z = 5;
   camera.position.y = 1;
 
-  addLights();
+  setLights();
   loadGlontzu();
 
   renderer.setAnimationLoop(animate);
@@ -66,7 +71,7 @@ function loadGlontzu() {
     (xhr) => {
       if (!infoBox) throw new Error("No infobox found");
       const percentageLoaded = (xhr.loaded / xhr.total) * 100;
-      infoBox.innerText =  percentageLoaded + '% loaded';
+      infoBox.innerText = percentageLoaded + '% loaded';
       if (percentageLoaded == 100) {
         infoBox.innerText = "";
       }
@@ -76,18 +81,30 @@ function loadGlontzu() {
     })
 }
 
-function addLights() {
+function setLights() {
+  /** @type {THREE.AmbientLight} */
   const ambientLigth = new THREE.AmbientLight(0x303030, 0.1);
   scene.add(ambientLigth);
-  directionalLight = new THREE.DirectionalLight(0xd67d3e, 1);
+
   directionalLight.position.set(0.8, 3, 1.0)
   scene.add(directionalLight);
+
+  const bottomLight = new THREE.DirectionalLight(0xff3030, 0.5);
+  bottomLight.position.set(0, -5, 0.2)
+  scene.add(bottomLight);
 }
 
 // render the scene
 function animate() {
   if (glontzu) {
-    glontzu.rotation.y += 0.01;
+    glontzu.rotation.y += 0.5 * clock.getDelta();
   }
   renderer.render(scene, camera);
 }
+
+// if the size of the windows changes, resize the scene
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
