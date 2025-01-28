@@ -37,10 +37,10 @@ function initiateScene() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
+  camera.position.set(0, 1, 5);
   const controls = new OrbitControls(camera, renderer.domElement);
-
-  camera.position.z = 5;
-  camera.position.y = 1;
+  controls.target.set(0, 1, 0);
+  controls.update();
 
   setLights();
   loadGlontzu();
