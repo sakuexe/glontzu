@@ -1,9 +1,40 @@
+@font-face {
+  font-family: 'Impact Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Impact Regular'), url('/fonts/impact.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Impact Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Impact Regular'), url('fonts/unicode.impact.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Impacted Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Impacted Regular'), url('fonts/Impacted.woff') format('woff');
+}
+
 body {
   margin: 0;
   background-color: black;
   position: relative;
   color: white;
-  font-family: sans-serif;
+  font-family: "Impact Regular", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: inherit;
 }
 
 #ui {
@@ -15,18 +46,19 @@ body {
   inset: 0;
   margin: auto;
   display: flex;
-  justify-content: center;
-  align-items: end;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   /*border: 4px solid red;*/
   z-index: 10;
   pointer-events: none;
 }
 
-#ui > div {
+#ui>div:has(button) {
   pointer-events: all;
 }
 
-#ui > div button {
+#ui>div button {
   cursor: pointer;
 }
 
@@ -62,4 +94,29 @@ canvas {
   width: 100%;
   text-align: center;
   font-weight: bold;
+}
+
+#ui>.heading {
+  text-align: center;
+  animation-name: fade-out;
+  animation-delay: 10s;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ui>.heading>* {
+  margin: 0;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
