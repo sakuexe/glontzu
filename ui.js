@@ -1,4 +1,4 @@
-import { directionalLight, camera } from "../main.js";
+import { directionalLight, camera } from "./main.js";
 
 /** @type {HTMLButtonElement | null} */
 const resetButton = document.querySelector("#ui button#reset-camera");
@@ -20,6 +20,7 @@ resetButton.addEventListener("click", (e) => {
 revealButton.addEventListener("click", toggleReveal);
 
 function toggleReveal() {
+  if (!revealButton) throw new Error("reveal button is still not found");
   isRevealed = !isRevealed;
 
   directionalLight.intensity = isRevealed ? 2 : 0.1;
