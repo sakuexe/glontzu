@@ -37,7 +37,7 @@ function initiateScene() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  camera.position.set(0, 1, 5);
+  camera.position.set(0, 1, 3);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1, 0);
   controls.update();
